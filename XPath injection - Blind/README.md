@@ -1,0 +1,1 @@
+# XPath injection - Blind (Hard)
