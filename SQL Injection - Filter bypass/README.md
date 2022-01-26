@@ -9,9 +9,9 @@ http://challenge01.root-me.org/web-serveur/ch30/?action=membres&id=
 
 ***Tip:***
 
-*Why I know that. If you get used to SQL injection, you will be sensitive with where the information are leak.*
+*Why I know that. If you get used to SQL injection, you will be sensitive with where the information is leaked.*
 
-But in this challenge, there are a lot of characters and words are filtered. I will list some I met: `or, and, ||, /**/, union, select, join, white space, %0a, %0b, %0c, ',comma(,),...`
+But in this challenge, there are a lot of characters and words are filtered. I will list some I met: `or, and, ||, /**/, union, select, join, whitespace, like, =,  %0a, %0b, %0c, ',comma(,),...`
 
 But with `select` and `union`, just upercase is filtered, when I change these words to lowercase, we can bypass.
 
@@ -19,7 +19,7 @@ With these information, my idea is use  `UNION` and `SELECT` to leak information
 
 ![image](https://user-images.githubusercontent.com/83667873/151036192-d74d4ba7-d7f2-48cf-8a7b-cd4383bfbcd7.png)
 
-If don't have above provided information, this challenge will become very difficult because when I test, `information_schema.tables` if filtered so we can't leak table name as well as columns name easily.
+If don't have above provided information, this challenge will become very difficult because when I test, `information_schema.tables, =, like` are filtered so we can't leak table name as well as columns name easily.
 
 Okay, back to challenge, because whitespace and many tab character is filter so I will use %09 to replace for whitespace.
 
