@@ -36,7 +36,7 @@ admin+++++++++++++++
 ```
 Next time an attacker logs in to the application with the admin account, the database will search for all matching accounts and will consider them valid for logging in. Therefore any entry with username as admin with space or without is a valid entry that can be used to authenticate to the application.
 
-*Reference:https://medium.com/r3d-buck3t/bypass-authentication-with-sql-truncation-attack-25a0c33ab87f*
+*Reference: https://medium.com/r3d-buck3t/bypass-authentication-with-sql-truncation-attack-25a0c33ab87f*
 
 Back to challenge, let see table user:
 
