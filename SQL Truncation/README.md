@@ -46,7 +46,7 @@ You can see that login or user has defined length is 12, so we just neet to crea
 
 ![image](https://user-images.githubusercontent.com/83667873/151137032-5b747275-4cfa-402a-a4ed-1002cb419d9c.png)
 
-Account create successfully:
+Account is created successfully:
 
 ![image](https://user-images.githubusercontent.com/83667873/151137089-8d803918-0eef-4914-8d34-f51cc0e33279.png)
 
