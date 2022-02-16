@@ -25,8 +25,8 @@ function storeUserSession($user)
     $_SESSION['user'] = $data;
 }
 ```
-Hàm này thực hiện serialize object được tạo từ thông tin username và password do người dùng nhập vào, sau đó thực hiện thay đổi Null_byte*Null_byte thành `\0\0\0` và cập nhập
-` $_SESSION['user']` thành giá trị trên
+Hàm này thực hiện serialize object được tạo từ thông tin username và password do người dùng nhập vào, sau đó thực hiện thay đổi `Null_byte*Null_byte` thành `\0\0\0` và cập nhập
+`$_SESSION['user']` thành giá trị trên
 
 **getUserSession()**
 
@@ -46,8 +46,8 @@ function getUserSession()
 
 ```
 
-Trước tiên nếu như `isset($_SESSION['user'])` thì sẽ thực hiện lấy giá trị $_SESSION['user'] thay đổi `\0\0\0` thành null_byte*null_byte, sau đó thực hiện unserialize giá trị trên thu được
-object user .Ngược lại nếu như $_SESSION['user'] chưa được set thì sẽ tạo object user với username là 'guest' và password là ''.
+Trước tiên nếu như `isset($_SESSION['user'])` thì sẽ thực hiện lấy giá trị `$_SESSION['user']` thay đổi `\0\0\0` thành `null_byte*null_byte`, sau đó thực hiện unserialize giá trị trên thu được
+object user .Ngược lại nếu như `$_SESSION['user']` chưa được set thì sẽ tạo object user với username là 'guest' và password là ''.
 Kết quả trả về là object user.
 
 ## Đoạn code chính
@@ -85,24 +85,24 @@ if (isset($_GET['source'])) {
 
 Sau đó, sẽ thực hiện tạo một object thuộc class User với giá trị username và password phía trên.
 
-Nếu object này có username = admin và password = sha512 thì sẽ login thành công (gọi hàm setLogged và bật _logged lên `true`)
+Nếu object này có username=admin và password = sha512() thì sẽ login thành công (gọi hàm `setLogged()` và bật `_logged` lên `true`)
 
 Gọi hàm storeUserSession() để set giá trị cho session.
 
 ### Method GET:
 
-Lấy thông tin của object user hiện tại bằng cách gọi đến hàm getUserSession()
+Lấy thông tin của object user hiện tại bằng cách gọi đến hàm `getUserSession()`
 
-Nếu như isLogged() thì flag sẽ được in ra.
+Nếu như `isLogged()` thì flag sẽ được in ra.
 
-Tóm lại, nhiệm vụ của chúng ta là cần phải làm cách gì đó để thuộc tính _logged có giá trị là `true`.
+Tóm lại, nhiệm vụ của chúng ta là cần phải làm cách gì đó để thuộc tính `_logged` có giá trị là `true`.
 
-Ở đây có một kiến thức chúng ta cần lưu ý là trong php, trong giá trị serialized, null_byte*null_byte sẽ đứng trước thuộc tính protected. Đó là lý do tại sao có sự xuất hiện của việc thay đi thay lại null_byte*null_byte->\0\0\0
+Ở đây có một kiến thức chúng ta cần lưu ý là trong php, trong giá trị serialized, `null_byte*null_byte` sẽ đứng trước thuộc tính protected. Đó là lý do tại sao có sự xuất hiện của việc thay đi thay lại `null_byte*null_byte->\0\0\0`
 
 Nhìn trong đoạn code thì có vẻ việc thay đi rồi thay lại thì khá bình thường nhưng thực chất là không. 
 
-Ví dụ ở đây mình nhập giá trị cho username là \0\0\0, thì lúc này lúc serialize thuộc tính username sẽ có số byte là 6. Nhưng sau khi giá trị serialize
-được lưu vào session và sau đó trước khi unserialize thì tất cả \0\0\0 sẽ được thay thế thành null_byte*null_byte tức chỉ 3 byte, mà trong giá trị serialized vẫn bị định nghĩa
+Ví dụ ở đây mình nhập giá trị cho username là `\0\0\0`, thì lúc này lúc serialize thuộc tính username sẽ có số byte là 6. Nhưng sau khi giá trị serialize
+được lưu vào session và sau đó trước khi unserialize thì tất cả `\0\0\0` sẽ được thay thế thành `null_byte*null_byte` tức chỉ 3 byte, mà trong giá trị serialized vẫn bị định nghĩa
 là 6 bytes nên nó bắt buộc phải lấy tiếp những byte tiếp theo sau giá trị của nó (trong trường hợp này là những byte định nghĩa cho thuộc tính password), dẫn đến lỗi xảy ra và không thể unserialize.
 
 Mình thực hiện dựng lại ở local để test:
@@ -123,11 +123,11 @@ Mình thực hiện dựng lại ở local để test:
 
 ![image](https://user-images.githubusercontent.com/83667873/154338625-cd2fb155-7a6a-4e78-a100-0f336faaa886.png)
 
-Đây chính là nơi mà chúng ta có thể tận dụng để thay đổi giá trị _logged thành true.
+Đây chính là nơi mà chúng ta có thể tận dụng để thay đổi giá trị `_logged` thành `true`.
 
 ý tưởng chính là chúng ta sẽ thực hiện truyền một số lượng \0\0\0 vào username sao cho sau khi thay thế nó sẽ cần thêm một số lượng byte, số lượng byte này là hợp lí để lấy luôn phần `s:12:"*_password`
 
-Sau đó trong phần payload của password chúng ta sẽ tính toán để định nghĩa các thuộc tính _password, _logged và _email với giá trị chúng ta mong muốn, ở đây có một lứu ý là chúng ta phải tính toán và set length cho email sao cho nó chứa cả đoạn dôi ra phía sau:
+Sau đó trong phần payload của password chúng ta sẽ tính toán để định nghĩa các thuộc tính `_password, _logged và _email` với giá trị chúng ta mong muốn, ở đây có một lứu ý là chúng ta phải tính toán và set length cho email sao cho nó chứa cả đoạn dôi ra phía sau:
 
 Hơi khó hiểu, nhưng chỉ cần mọi người cố gắng ngẫm tí là sẽ hiểu ra thôi.
 
