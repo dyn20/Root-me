@@ -85,7 +85,7 @@ if (isset($_GET['source'])) {
 
 Sau đó, sẽ thực hiện tạo một object thuộc class User với giá trị username và password phía trên.
 
-Nếu object này có username = admin và password = sha512 thì sẽ login thành công (gọi hàm setLogged và bật _logged lên `true`
+Nếu object này có username = admin và password = sha512 thì sẽ login thành công (gọi hàm setLogged và bật _logged lên `true`)
 
 Gọi hàm storeUserSession() để set giá trị cho session.
 
@@ -97,12 +97,12 @@ Nếu như isLogged() thì flag sẽ được in ra.
 
 Tóm lại, nhiệm vụ của chúng ta là cần phải làm cách gì đó để thuộc tính _logged có giá trị là `true`.
 
-Ở đây có một kiến thức chúng ta cần lưu ý là trong php, trong giá trị serialized, nullbyte*nullbyte sẽ đứng trước thuộc tính protected. Đó là lý do tại sao có sự xuất hiện của việc thay đi thay lại nullbute*nullbyte->\0\0\0
+Ở đây có một kiến thức chúng ta cần lưu ý là trong php, trong giá trị serialized, null_byte*null_byte sẽ đứng trước thuộc tính protected. Đó là lý do tại sao có sự xuất hiện của việc thay đi thay lại null_byte*null_byte->\0\0\0
 
 Nhìn trong đoạn code thì có vẻ việc thay đi rồi thay lại thì khá bình thường nhưng thực chất là không. 
 
 Ví dụ ở đây mình nhập giá trị cho username là \0\0\0, thì lúc này lúc serialize thuộc tính username sẽ có số byte là 6. Nhưng sau khi giá trị serialize
-được lưu vào session và sau đó trước khi unserialize thì tất cả \0\0\0 sẽ được thay thế thành nullbyte*nullbyte tức chỉ 3 byte, mà trong giá trị serialized vẫn bị định nghĩa
+được lưu vào session và sau đó trước khi unserialize thì tất cả \0\0\0 sẽ được thay thế thành null_byte*null_byte tức chỉ 3 byte, mà trong giá trị serialized vẫn bị định nghĩa
 là 6 bytes nên nó bắt buộc phải lấy tiếp những byte tiếp theo sau giá trị của nó (trong trường hợp này là những byte định nghĩa cho thuộc tính password), dẫn đến lỗi xảy ra và không thể unserialize.
 
 Mình thực hiện dựng lại ở local để test:
